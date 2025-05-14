@@ -1,0 +1,14 @@
+/* src/app/admin/questions/questions.module.css */
+
+.questionContent {
+  /* Base styling */
+  font-size: inherit; /* Inherit table cell font size */
+  line-height: 1.5;
+  overflow-wrap: break-word; /* Prevent long text from overflowing */
+  max-width: 100%; /* Ensure it doesn't exceed cell width */
+  margin: 0; /* Remove default paragraph margins if any */
+  white-space: pre-wrap; /* Preserve whitespace and wrap text */
+}
+
+/* Add other styles if needed for other elements within the cell, */
+/* but the direct HTML rendering styles are removed */

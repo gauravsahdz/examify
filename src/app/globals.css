@@ -1,0 +1,134 @@
+/* Add Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    /* Light Theme Variables - Aligned with proposal */
+    --background: 220 14.3% 95.9%; /* light gray (#f0f2f5) */
+    --foreground: 224 71.4% 4.1%; /* Near black for text */
+    --card: 0 0% 100%; /* White card */
+    --card-foreground: 224 71.4% 4.1%; /* Near black text on card */
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 224 71.4% 4.1%; /* Near black text on popover */
+    --primary: 210 88% 52%; /* Ant Design Blue (#1890ff) */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+    --secondary: 220 14.3% 95.9%; /* Light gray (#f0f2f5) - Re-using background */
+    --secondary-foreground: 220.9 39.3% 11%; /* Darker gray text */
+    --muted: 220 14.3% 95.9%; /* Use secondary gray */
+    --muted-foreground: 220 8.9% 46.1%; /* Grayer text for muted */
+    --accent: 134 60% 52%; /* Ant Design Green (#52c41a) */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
+    --destructive: 0 72.2% 50.6%; /* Default Destructive */
+    --destructive-foreground: 0 0% 100%; /* Default White */
+    --border: 220 13% 91%; /* Light gray border */
+    --input: 220 13% 91%; /* Light gray input */
+    --ring: 210 88% 52%; /* Use primary color for ring */
+    --radius: 0.5rem; /* Keep default radius */
+
+    /* Chart Colors */
+    --chart-1: 210 88% 52%; /* Primary Blue */
+    --chart-2: 134 60% 52%; /* Accent Green */
+    --chart-3: 30 90% 60%; /* Orange */
+    --chart-4: 260 80% 65%; /* Purple */
+    --chart-5: 0 72.2% 50.6%; /* Destructive Red */
+
+     /* Sidebar Specific Theme (Darker sidebar for contrast) */
+    --sidebar-background: 224 71.4% 10%; /* Darker Blue/Almost Black */
+    --sidebar-foreground: 210 20% 98%;   /* White text */
+    --sidebar-primary: 210 88% 62%;      /* Lighter primary for selection */
+    --sidebar-primary-foreground: 0 0% 100%; /* White text */
+    --sidebar-accent: 224 71.4% 15%;      /* Slightly lighter dark for hover */
+    --sidebar-accent-foreground: 210 20% 98%; /* White text */
+    --sidebar-border: 224 71.4% 15%;      /* Darker border */
+    --sidebar-ring: 210 88% 52%;        /* Primary ring color */
+  }
+
+  .dark {
+    /* Dark Theme Variables */
+    --background: 224 71.4% 4.1%; /* Near black background */
+    --foreground: 210 20% 98%; /* White text */
+    --card: 220 13% 9%; /* Dark gray card */
+    --card-foreground: 210 20% 98%; /* White text on card */
+    --popover: 220 13% 9%; /* Dark gray popover */
+    --popover-foreground: 210 20% 98%; /* White text on popover */
+    --primary: 210 88% 52%; /* Ant Design Blue (#1890ff) */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+    --secondary: 215 27.9% 16.9%; /* Darker secondary */
+    --secondary-foreground: 210 20% 98%; /* White text on secondary */
+    --muted: 215 27.9% 16.9%; /* Use secondary dark gray */
+    --muted-foreground: 217.9 10.6% 64.9%; /* Lighter gray text for muted */
+    --accent: 134 60% 52%; /* Ant Design Green (#52c41a) */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
+    --destructive: 0 62.8% 50.6%; /* Adjusted Destructive Red for dark */
+    --destructive-foreground: 0 0% 100%; /* White text */
+    --border: 215 27.9% 16.9%; /* Darker border */
+    --input: 215 27.9% 16.9%; /* Darker input */
+    --ring: 210 88% 52%; /* Primary ring color */
+    --radius: 0.5rem;
+
+    /* Dark Chart Colors */
+    --chart-1: 210 88% 52%; /* Primary Blue */
+    --chart-2: 134 60% 52%; /* Accent Green */
+    --chart-3: 30 90% 60%; /* Orange */
+    --chart-4: 260 80% 65%; /* Purple */
+    --chart-5: 0 62.8% 50.6%; /* Destructive Red */
+
+    /* Dark Sidebar Specific Theme */
+    --sidebar-background: 224 71.4% 10%; /* Consistent Dark */
+    --sidebar-foreground: 210 20% 98%;   /* White text */
+    --sidebar-primary: 210 88% 62%;      /* Lighter blue for selection */
+    --sidebar-primary-foreground: 0 0% 100%; /* White text */
+    --sidebar-accent: 224 71.4% 15%;      /* Slightly lighter dark hover */
+    --sidebar-accent-foreground: 210 20% 98%; /* White text */
+    --sidebar-border: 224 71.4% 15%;      /* Darker border */
+    --sidebar-ring: 210 88% 52%;        /* Primary ring */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+body {
+  font-family: 'Inter', sans-serif; /* Using a more modern font */
+  @apply bg-background text-foreground antialiased; /* Apply antialiased here */
+}
+
+/* Custom animation */
+@keyframes subtle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); } /* Slightly increased float */
+}
+
+.animate-subtle-float {
+  animation: subtle-float 3s ease-in-out infinite;
+}
+
+/* Section slide-in animation (can be applied with Framer Motion or directly) */
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in-up {
+  animation: slide-in-up 0.6s ease-out forwards;
+}
+
+/* Add a subtle hover effect for feature cards */
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}

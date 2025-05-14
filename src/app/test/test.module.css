@@ -1,0 +1,12 @@
+/* src/app/test/test.module.css */
+
+.questionContent {
+  /* Base styling for the question container */
+  font-size: inherit; /* Inherit CardContent font size */
+  line-height: 1.6;
+  word-wrap: break-word;
+  color: hsl(var(--foreground)); /* Ensure text color matches theme */
+  white-space: pre-wrap; /* Preserve whitespace and wrap text */
+}
+
+/* Add other necessary styles */

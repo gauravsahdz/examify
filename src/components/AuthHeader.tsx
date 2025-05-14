@@ -17,7 +17,7 @@ export function AuthHeader() {
         "absolute top-0 left-0 z-50 w-full border-b border-transparent bg-transparent" // Adjusted for overlay effect
       )}
     >
-      <div className="container flex h-16 max-w-screen-lg items-center justify-center"> {/* Centered Logo */}
+      <div className="flex h-16 items-center justify-center"> {/* Centered Logo */}
         {/* Logo and Site Name */}
         <Link href="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
           <Zap className="w-7 h-7" />

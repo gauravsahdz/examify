@@ -22,7 +22,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  // AlertDialogTrigger, // No longer used here as dialog is state-controlled
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from 'framer-motion';
@@ -134,14 +134,17 @@ export default function QuestionsPage() {
      if (!questions) return [];
      const lowerSearchTerm = searchTerm.toLowerCase();
 
-     return questions.filter(q =>
-        (q.text.toLowerCase().includes(lowerSearchTerm) ||
-         q.topic?.toLowerCase().includes(lowerSearchTerm) ||
-         q.difficulty.toLowerCase().includes(lowerSearchTerm) ||
-         q.folder?.toLowerCase().includes(lowerSearchTerm) ||
-         q.type.toLowerCase().includes(lowerSearchTerm)) &&
-        (!filterFolder || q.folder === filterFolder)
-     );
+     return questions.filter(q => {
+        const matchesSearch = (
+          (q.text && q.text.toLowerCase().includes(lowerSearchTerm)) ||
+          (q.topic && q.topic.toLowerCase().includes(lowerSearchTerm)) ||
+          (q.difficulty && q.difficulty.toLowerCase().includes(lowerSearchTerm)) ||
+          (q.folder && q.folder.toLowerCase().includes(lowerSearchTerm)) ||
+          (q.type && q.type.toLowerCase().includes(lowerSearchTerm))
+        );
+        const matchesFolder = !filterFolder || q.folder === filterFolder;
+        return matchesSearch && matchesFolder;
+     });
    }, [questions, searchTerm, filterFolder]);
 
 
@@ -262,18 +265,17 @@ export default function QuestionsPage() {
                             <Edit className="h-4 w-4" />
                            </Link>
                          </Button>
-                        <AlertDialogTrigger asChild>
+                        {/* Button now directly sets state to open the dialog */}
                            <Button
                               variant="ghost"
                               size="icon"
                               className="text-destructive hover:text-destructive"
                               title="Delete Question"
-                              disabled={!canDeleteQuestions || deleteMutation.isPending && deleteMutation.variables?.id === q.id}
+                              disabled={!canDeleteQuestions || (deleteMutation.isPending && deleteMutation.variables?.id === q.id)}
                               onClick={() => handleDeleteClick(q)}
                             >
-                             {deleteMutation.isPending && deleteMutation.variables?.id === q.id ? <Loader2 className="h-4 w-4 animate-spin"/> : <Trash2 className="h-4 w-4" />}
+                             {(deleteMutation.isPending && deleteMutation.variables?.id === q.id) ? <Loader2 className="h-4 w-4 animate-spin"/> : <Trash2 className="h-4 w-4" />}
                            </Button>
-                        </AlertDialogTrigger>
                       </TableCell>
                     </TableRow>
                   ))
@@ -313,3 +315,4 @@ export default function QuestionsPage() {
     </div>
   );
 }
+

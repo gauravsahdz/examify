@@ -491,6 +491,21 @@ export default function TestPage() {
     const intervalId = setInterval(() => saveProgress(false), 30000);
     return () => clearInterval(intervalId);
   }, [test?.autoSave, isFinished, submissionId, saveProgress]);
+  
+  useEffect(() => {
+    if (test?.lockBrowser) {
+      const handleBlur = () => {
+        if (document.visibilityState === 'hidden') {
+          toast({ title: "Attention!", description: "Switching tabs or minimizing the test window is not allowed.", variant: "destructive", duration: 5000 });
+          window.focus();
+        }
+      };
+      document.addEventListener('visibilitychange', handleBlur);
+      return () => {
+        document.removeEventListener('visibilitychange', handleBlur);
+      };
+    }
+  }, [test?.lockBrowser, toast]);
 
 
   const handleAnswerChange = (questionId: string, value: Answer | CodeExecutionResult[] | undefined) => {

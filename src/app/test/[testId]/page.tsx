@@ -22,6 +22,7 @@ import { serverTimestamp, Timestamp, where } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import Image from 'next/image';
+import Webcam from 'react-webcam';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -757,7 +758,9 @@ export default function TestPage() {
               )}
                {test?.webcamEnabled && hasCameraPermission === true && (
                 <div className="w-20 h-16 rounded-md overflow-hidden border bg-muted relative" title="Webcam Feed">
-                  <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                  <Webcam
+                    className='w-full h-full object-cover'
+                  />
                 </div>
               )}
               {test?.webcamEnabled && hasCameraPermission === false && ( // Show placeholder if permission denied

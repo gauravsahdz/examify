@@ -12,7 +12,7 @@ import { Clock, CheckCircle, ArrowLeft, ArrowRight, AlertTriangle, Loader2, Came
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
+import { cn, getSubmissionById, removeUndefinedDeep } from '@/lib/utils';
 import { useFirestoreDocument, useFirestoreQuery } from '@/hooks/useFirestoreQuery';
 import { useAddDocument, useUpdateDocument } from '@/hooks/useFirestoreMutation';
 import type { Test, Question, Submission, SubmissionAnswer, UserProfile, CodeExecutionResult, TestCase } from '@/lib/types';
@@ -100,6 +100,7 @@ export default function TestPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isExecutingCode, setIsExecutingCode] = useState(false);
   const [executionResults, setExecutionResults] = useState<Record<string, CodeExecutionResult[]>>({});
+  const [hasInitiated, setHasInitiated] = useState(false);
 
   const isTestFetchEnabled = !!testId && !authLoading && !!user;
   console.log(`[TestPage DEBUG] isTestFetchEnabled: ${isTestFetchEnabled} (testId: ${!!testId}, !authLoading: ${!authLoading}, !!user: ${!!user})`);
@@ -230,11 +231,12 @@ export default function TestPage() {
       blockStartReason === null &&
       (!test.webcamEnabled || hasCameraPermission === true);
 
-    if (isReadyToInitialize) {
+    if (isReadyToInitialize && !hasInitiated) {
       console.log("[TestPage] Conditions met, initializing test state and creating submission via initializeTestStateAndSubmission.");
       initializeTestStateAndSubmission();
+      setHasInitiated(true);
     }
-  }, [authLoading, user, userProfile, isLoadingTest, errorTest, test, testQuestions.length, isLoadingQuestions, isFinished, submissionId, blockStartReason, hasCameraPermission, initializeTestStateAndSubmission]);
+  }, [authLoading, user, userProfile, isLoadingTest, errorTest, test, testQuestions.length, isLoadingQuestions, isFinished, submissionId, blockStartReason, hasCameraPermission, initializeTestStateAndSubmission, hasInitiated]);
 
 
   useEffect(() => {
@@ -406,7 +408,9 @@ export default function TestPage() {
           answer: answer as Answer,
           isCorrect: isAnswerCorrect,
           score: pointsAwarded,
-          codeExecutionResults: question?.type === 'code-snippet' ? results : undefined,
+          ...(question?.type === 'code-snippet' && results !== undefined
+            ? { codeExecutionResults: results }
+            : {}),          
         };
       })
       .filter(a => a.answer !== null && (typeof a.answer === 'string' ? a.answer.trim() !== '' : Array.isArray(a.answer) ? a.answer.length > 0 : true));
@@ -423,18 +427,21 @@ export default function TestPage() {
         videoRef.current.srcObject = null;
         console.log("[TestPage] Webcam stream stopped.");
       }
+      console.log("Server timestamp token:", serverTimestamp());
+      const payload = {
+        status: 'Submitted',
+        submittedAt: serverTimestamp(),
+        score: percentage,
+        totalPointsAwarded: awarded,
+        maxPossiblePoints: max,
+        timeTakenSeconds: timeTakenSeconds,
+        updatedAt: serverTimestamp(),
+        answers: finalAnswers,
+      };
+      
       await updateSubmission.mutateAsync({
         id: submissionId,
-        data: {
-          status: 'Submitted',
-          submittedAt: serverTimestamp(),
-          score: percentage,
-          totalPointsAwarded: awarded,
-          maxPossiblePoints: max,
-          timeTakenSeconds: timeTakenSeconds,
-          updatedAt: serverTimestamp(),
-          answers: finalAnswers,
-        }
+        data: removeUndefinedDeep(payload)
       });
       setIsFinished(true);
       setTimeLeft(0);

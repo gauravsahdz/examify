@@ -441,7 +441,7 @@ export default function TestPage() {
       
       await updateSubmission.mutateAsync({
         id: submissionId,
-        data: removeUndefinedDeep(payload)
+        data: payload
       });
       setIsFinished(true);
       setTimeLeft(0);
